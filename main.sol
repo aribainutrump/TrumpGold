@@ -64,3 +64,36 @@ contract TrumpGold {
     // -------------------------------------------------------------------------
 
     mapping(address => uint256) private _balanceOf;
+    mapping(address => mapping(address => uint256)) private _allowance;
+    uint256 private _totalSupply;
+
+    /// @notice Cumulative amount ever minted (including initial supply).
+    uint256 private _totalMinted;
+    /// @notice Cumulative amount ever burned.
+    uint256 private _totalBurned;
+
+    address public immutable reserveHolder;
+    address public immutable governor;
+
+    /// @notice When true, transfer, transferFrom, mint are blocked; burn and approve remain allowed.
+    bool private _paused;
+
+    // =========================================================================
+    // EVENTS
+    // =========================================================================
+    // AurumTransfer: every move of tokens (including mint and burn with address(0)).
+    // AurumApproval: allowance changes.
+    // AurumMint / AurumBurn: reserve mint and user burn (also emit AurumTransfer).
+    // AurumPaused / AurumUnpaused: governor toggles pause.
+    // AurumBatchTransfer: emitted once per batchTransfer call with recipient count.
+    // -------------------------------------------------------------------------
+
+    event AurumTransfer(address indexed from, address indexed to, uint256 value);
+    event AurumApproval(address indexed owner, address indexed spender, uint256 value);
+    event AurumMint(address indexed to, uint256 value);
+    event AurumBurn(address indexed from, uint256 value);
+    event AurumPaused(address indexed by);
+    event AurumUnpaused(address indexed by);
+    event AurumBatchTransfer(address indexed from, uint256 count);
+
+    // =========================================================================
