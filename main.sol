@@ -97,3 +97,36 @@ contract TrumpGold {
     event AurumBatchTransfer(address indexed from, uint256 count);
 
     // =========================================================================
+    // CUSTOM ERRORS
+    // =========================================================================
+    // TG_NotGovernor: caller is not the immutable governor (pause/unpause).
+    // TG_NotReserveHolder: caller is not the immutable reserveHolder (mint).
+    // TG_ZeroAddress: zero address used where forbidden.
+    // TG_CapExceeded: mint would exceed CAP_WEI.
+    // TG_InsufficientBalance / TG_InsufficientAllowance: transfer/transferFrom checks.
+    // TG_Paused / TG_NotPaused: modifier checks for pause/unpause.
+    // TG_Batch*: batchTransfer / batchBalanceOf / sumBalances etc. length and size checks.
+    // TG_AllowanceUnderflow: decreaseAllowance would go below zero.
+    // -------------------------------------------------------------------------
+
+    error TG_NotGovernor();
+    error TG_NotReserveHolder();
+    error TG_ZeroAddress();
+    error TG_CapExceeded();
+    error TG_InsufficientBalance();
+    error TG_InsufficientAllowance();
+    error TG_Paused();
+    error TG_NotPaused();
+    error TG_BatchLengthMismatch();
+    error TG_BatchTooLarge();
+    error TG_BatchZeroLength();
+    error TG_AllowanceUnderflow();
+
+    // =========================================================================
+    // MODIFIERS
+    // =========================================================================
+    // whenNotPaused: used on transfer, transferFrom, mint. Reverts with TG_Paused if _paused is true.
+    // whenPaused: used on unpause. Reverts with TG_NotPaused if _paused is false.
+    // -------------------------------------------------------------------------
+
+    modifier whenNotPaused() {
