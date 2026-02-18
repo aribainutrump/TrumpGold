@@ -130,3 +130,36 @@ contract TrumpGold {
     // -------------------------------------------------------------------------
 
     modifier whenNotPaused() {
+        if (_paused) revert TG_Paused();
+        _;
+    }
+
+    modifier whenPaused() {
+        if (!_paused) revert TG_NotPaused();
+        _;
+    }
+
+    // =========================================================================
+    // CONSTRUCTOR
+    // =========================================================================
+    // Sets immutable governor and reserveHolder. Mints entire CAP_WEI to reserveHolder.
+    // _totalMinted is set to CAP_WEI. _totalBurned remains 0.
+    // -------------------------------------------------------------------------
+
+    constructor() {
+        governor = 0x04900d9874E973DE39D7228c7E0237AA4a38AcC8;
+        reserveHolder = 0x2B5c8d1E9f3A4b6C7D0e1F2A3B4C5D6E7F8A9B0;
+        _totalSupply = CAP_WEI;
+        _balanceOf[reserveHolder] = CAP_WEI;
+        _totalMinted = CAP_WEI;
+        emit AurumMint(reserveHolder, CAP_WEI);
+        emit AurumTransfer(address(0), reserveHolder, CAP_WEI);
+    }
+
+    // -------------------------------------------------------------------------
+    // ERC20-style view (name/symbol/decimals for compatibility)
+    // -------------------------------------------------------------------------
+
+    /// @notice Returns the token name.
+    function name() external pure returns (string memory) {
+        return AURUM_NAME;
