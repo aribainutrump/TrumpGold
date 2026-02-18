@@ -31,3 +31,36 @@ pragma solidity ^0.8.20;
  * Implements name(), symbol(), decimals(), totalSupply(), balanceOf(), allowance(), transfer(),
  * approve(), transferFrom(). increaseAllowance and decreaseAllowance are also provided.
  *
+ * ## Security
+ * - No external calls to user-supplied addresses (no call/delegatecall to accounts).
+ * - Reentrancy: only state updates and events; no cross-contract calls in transfer/mint/burn.
+ * - Governor and reserveHolder are immutable; cannot be changed after deployment.
+ * - Pause only blocks transfer/transferFrom/mint; burn and approve remain available when paused.
+ */
+contract TrumpGold {
+    // =========================================================================
+    // CONSTANTS
+    // =========================================================================
+    // All token metadata and limits are fixed at compile time.
+    // -------------------------------------------------------------------------
+
+    string public constant AURUM_NAME = "TrumpGold";
+    string public constant AURUM_SYMBOL = "TGOLD";
+    uint8 public constant AURUM_DECIMALS = 18;
+    uint256 public constant CAP_WEI = 888_888_888 * 10**18;
+
+    /// @dev Maximum number of entries in a single batch operation to avoid gas limits.
+    uint256 public constant BATCH_SIZE_LIMIT = 100;
+
+    /// @dev Placeholder for EIP-712 domain separator if needed in future; not used in current logic.
+    bytes32 public constant AURUM_DOMAIN_TYPEHASH = keccak256("TrumpGold(uint256 chainId)");
+
+    // =========================================================================
+    // STORAGE
+    // =========================================================================
+    // Balance and allowance mappings follow ERC20 semantics.
+    // _totalMinted and _totalBurned are cumulative counters for analytics.
+    // _paused is set by governor and blocks transfer/transferFrom/mint when true.
+    // -------------------------------------------------------------------------
+
+    mapping(address => uint256) private _balanceOf;
