@@ -163,3 +163,36 @@ contract TrumpGold {
     /// @notice Returns the token name.
     function name() external pure returns (string memory) {
         return AURUM_NAME;
+    }
+
+    /// @notice Returns the token symbol.
+    function symbol() external pure returns (string memory) {
+        return AURUM_SYMBOL;
+    }
+
+    /// @notice Returns the number of decimals used by the token.
+    function decimals() external pure returns (uint8) {
+        return AURUM_DECIMALS;
+    }
+
+    /// @notice Returns the total token supply.
+    function totalSupply() external view returns (uint256) {
+        return _totalSupply;
+    }
+
+    /// @notice Returns the balance of `account`.
+    function balanceOf(address account) external view returns (uint256) {
+        return _balanceOf[account];
+    }
+
+    /// @notice Returns the amount `spender` may transfer from `owner`.
+    function allowance(address owner, address spender) external view returns (uint256) {
+        return _allowance[owner][spender];
+    }
+
+    // -------------------------------------------------------------------------
+    // Supply and cap views
+    // -------------------------------------------------------------------------
+
+    /// @notice Returns the maximum supply (cap) in wei.
+    function getCapWei() external pure returns (uint256) {
