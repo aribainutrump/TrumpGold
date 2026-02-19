@@ -196,3 +196,36 @@ contract TrumpGold {
 
     /// @notice Returns the maximum supply (cap) in wei.
     function getCapWei() external pure returns (uint256) {
+        return CAP_WEI;
+    }
+
+    /// @notice Returns the remaining mintable amount (cap minus current supply).
+    function supplyRemaining() external view returns (uint256) {
+        return CAP_WEI - _totalSupply;
+    }
+
+    /// @notice Returns the total amount ever minted (including initial mint).
+    function totalMinted() external view returns (uint256) {
+        return _totalMinted;
+    }
+
+    /// @notice Returns the total amount ever burned.
+    function totalBurned() external view returns (uint256) {
+        return _totalBurned;
+    }
+
+    /// @notice Returns whether transfers are paused.
+    function paused() external view returns (bool) {
+        return _paused;
+    }
+
+    // -------------------------------------------------------------------------
+    // Transfer and approval
+    // -------------------------------------------------------------------------
+
+    /// @notice Transfers `value` tokens from msg.sender to `to`.
+    /// @param to Recipient address (must not be zero).
+    /// @param value Amount in wei.
+    /// @return true on success. Reverts with TG_ZeroAddress, TG_InsufficientBalance, or TG_Paused.
+    function transfer(address to, uint256 value) external whenNotPaused returns (bool) {
+        _transfer(msg.sender, to, value);
